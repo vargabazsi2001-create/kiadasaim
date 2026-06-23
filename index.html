@@ -37,7 +37,7 @@
                 Ingyenes és független pénzügyi tanácsadás. Segítek eligazodni az állami támogatások, adókedvezmények, hitelek és megtakarítások világában.
             </p>
             <div class="pt-4 flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#kapcsolat" class="bg-[#84CF56] hover:bg-[#73be47] text-white font-semibold px-8 py-4 rounded-xl transition shadow-lg text-base">
+                <a href="#kapcsolat" class="bg-[#84CF56] hover:bg-[#73be47] text-white font-semibold px-8 py-4 rounded-xl transition shadow-lg text-base text-center">
                     Ingyenes konzultáció rögzítése
                 </a>
                 <a href="app.html" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-medium px-8 py-4 rounded-xl transition text-base flex items-center justify-center gap-2">
@@ -82,7 +82,7 @@
             <div class="space-y-1.5">
                 <i class="fa-solid fa-percent text-xl text-[#045A8B]"></i>
                 <h3 class="font-bold text-slate-900 text-sm">Hiteloptimalizálás</h3>
-                <p class="text-xs text-slate-400">Meglévő és új hitelek felülvizsgálata a legjobb piacon elérhető kamatokkal.</p>
+                <p class="text-xs text-slate-400">Meglévő és új hitelek felülvizsgálata a legjobb elérhető kamatokkal.</p>
             </div>
             <div class="space-y-1.5">
                 <i class="fa-solid fa-hand-holding-dollar text-xl text-[#045A8B]"></i>
@@ -96,34 +96,31 @@
         <div class="max-w-md mx-auto px-6">
             <div class="text-center mb-8 space-y-2">
                 <h2 class="text-2xl font-bold text-slate-900">Kérjen ingyenes visszahívást!</h2>
-                <p class="text-sm text-slate-500">Töltse ki az alábbi adatokat, és hamarosan felveszem Önnel a kapcsolatot.</p>
+                <p class="text-sm text-slate-500">Töltse ki az alábbi adatokat, és az űrlap automatikusan összeállítja az e-mailt az Ön levelezőjében.</p>
             </div>
 
-            <form action="https://formsubmit.co/vbalazs2001@icloud.com" method="POST" class="bg-white rounded-3xl p-6 shadow-md border border-slate-200/60 space-y-4">
-                <input type="hidden" name="_next" value="window.location.href">
-                <input type="hidden" name="_subject" value="Új FinanceMentor jelentkező!">
-                
+            <form id="mentor-form" class="bg-white rounded-3xl p-6 shadow-md border border-slate-200/60 space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1">Az Ön neve</label>
-                    <input type="text" name="Név" required placeholder="Minta János"
+                    <input type="text" id="form-name" required placeholder="Minta János"
                         class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#045A8B] text-sm outline-none transition">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1">E-mail címe</label>
-                    <input type="email" name="Email" required placeholder="janos@example.com"
+                    <input type="email" id="form-email" required placeholder="janos@example.com"
                         class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#045A8B] text-sm outline-none transition">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1">Telefonszáma</label>
-                    <input type="tel" name="Telefon" required placeholder="+36 30 123 4567"
+                    <input type="tel" id="form-phone" required placeholder="+36 30 123 4567"
                         class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#045A8B] text-sm outline-none transition">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1">Melyik téma érdekli leginkább?</label>
-                    <select name="Érdeklődési kör" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#045A8B] text-sm outline-none transition appearance-none">
+                    <select id="form-subject" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#045A8B] text-sm outline-none transition appearance-none">
                         <option value="Gondtalan nyugdíjas évek">🌅 Gondtalan nyugdíjas évek</option>
                         <option value="Befektetési lehetőségek">📈 Befektetési lehetőségek</option>
                         <option value="Adókedvezmények kihasználása">💰 Adókedvezmények kihasználása</option>
@@ -134,12 +131,12 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 mb-1">Üzenet (opcionális)</label>
-                    <textarea name="Üzenet" rows="3" placeholder="Ide írhatja kérdését..."
+                    <textarea id="form-message" rows="3" placeholder="Ide írhatja kérdését..."
                         class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#045A8B] text-sm outline-none transition resize-none"></textarea>
                 </div>
 
                 <button type="submit" class="w-full bg-[#84CF56] hover:bg-[#73be47] text-white font-semibold py-3 px-4 rounded-xl transition shadow-md text-sm cursor-pointer">
-                    Adatok elküldése
+                    E-mail előkészítése
                 </button>
             </form>
         </div>
@@ -152,11 +149,37 @@
                 <div class="text-xs text-slate-500">Független Pénzügyi Tanácsadás</div>
             </div>
             <div class="text-sm space-y-1">
-                <div><i class="fa-solid fa-envelope mr-1.5 text-[#84CF56]"></i> balazs.varga@ovb.hu</div>
+                <div><i class="fa-solid fa-envelope mr-1.5 text-[#84CF56]"></i> vbalazs2001@icloud.com</div>
             </div>
             <div class="text-xs text-slate-500">&copy; 2026 FinanceMentor. Minden jog fenntartva.</div>
         </div>
     </footer>
+
+    <script>
+        document.getElementById('mentor-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('form-name').value;
+            const email = document.getElementById('form-email').value;
+            const phone = document.getElementById('form-phone').value;
+            const subject = document.getElementById('form-subject').value;
+            const message = document.getElementById('form-message').value;
+            
+            const emailTo = 'vbalazs2001@icloud.com';
+            const emailSubject = 'Új FinanceMentor Jelentkezés: ' + name;
+            
+            let emailBody = `Név: ${name}\n`;
+            emailBody += `E-mail: ${email}\n`;
+            emailBody += `Telefon: ${phone}\n`;
+            emailBody += `Érdekelt témakör: ${subject}\n`;
+            if(message.trim() !== "") {
+                emailBody += `Üzenet: ${message}\n`;
+            }
+            
+            // Megnyitja az levelezőt a frissített iCloud címmel
+            window.location.href = `mailto:${emailTo}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+        });
+    </script>
 
 </body>
 </html>
