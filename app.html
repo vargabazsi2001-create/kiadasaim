@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Havi Kiadáskövető</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen pb-12">
+
+    <div class="max-w-md mx-auto px-4 pt-6">
+        <header class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Kiadásaim</h1>
+                <p class="text-sm text-slate-500">Egyszerű havi költségvetés</p>
+            </div>
+            <div class="bg-blue-50 text-blue-600 p-3 rounded-2xl">
+                <i class="fa-solid fa-wallet text-xl"></i>
+            </div>
+        </header>
+
+        <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-3xl p-6 shadow-xl mb-6">
+            <span class="text-sm text-slate-400 block mb-1">E havi összes költés</span>
+            <div id="total-amount" class="text-3xl font-extrabold tracking-tight">0 Ft</div>
+        </div>
+
+        <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 mb-6">
+            <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Új tétel hozzáadása</h2>
+            <form id="expense-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Megnevezés</label>
+                    <input type="text" id="expense-title" placeholder="Pl.: Bevásárlás, Kávé, Rezsi" required
+                        class="w-full px-4 py-3 bg-slate-50 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 text-sm outline-none transition">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Összeg (Ft)</label>
+                        <input type="number" id="expense-amount" placeholder="0" min="1" required
+                            class="w-full px-4 py-3 bg-slate-50 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 text-sm outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Kategória</label>
+                        <select id="expense-category" 
+                            class="w-full px-4 py-3 bg-slate-50 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 text-sm outline-none transition appearance-none">
+                            <option value="Étel/Ital">🛒 Étel/Ital</option>
+                            <option value="Lakás/Rezsi">🏠 Lakás/Rezsi</option>
+                            <option value="Utazás">🚗 Utazás</option>
+                            <option value="Szórakozás">🎉 Szórakozás</option>
+                            <option value="Egyéb">📦 Egyéb</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-xl transition shadow-sm text-sm flex justify-center items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-plus text-xs"></i> Hozzáadás
+                </button>
+            </form>
+        </div>
+
+        <div>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Tranzakciók</h2>
+                <button id="clear-all" class="text-xs text-red-500 hover:text-red-600 font-medium cursor-pointer">Mind törlése</button>
+            </div>
+            <div id="expense-list" class="space-y-3"></div>
+        </div>
+    </div>
+
+    <script>
+        const expenseForm = document.getElementById('expense-form');
+        const titleInput = document.getElementById('expense-title');
+        const amountInput = document.getElementById('expense-amount');
+        const categorySelect = document.getElementById('expense-category');
+        const expenseList = document.getElementById('expense-list');
+        const totalAmountDisplay = document.getElementById('total-amount');
+        const clearAllBtn = document.getElementById('clear-all');
+
+        let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+
+        function init() {
+            renderExpenses();
+            updateTotal();
+        }
+
+        function renderExpenses() {
+            expenseList.innerHTML = '';
+            if (expenses.length === 0) {
+                expenseList.innerHTML = `
+                    <div class="text-center py-8 text-slate-400 text-sm bg-white rounded-2xl border border-dashed border-slate-200">
+                        Nincs még rögzített kiadás ebben a hónapban.
+                    </div>
+                `;
+                return;
+            }
+
+            [...expenses].reverse().forEach((expense) => {
+                const item = document.createElement('div');
+                item.className = 'bg-white rounded-2xl p-4 flex justify-between items-center shadow-xs border border-slate-100';
+                item.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-8 rounded-full ${getCategoryColor(expense.category)}"></div>
+                        <div>
+                            <h3 class="font-semibold text-slate-800 text-sm">${expense.title}</h3>
+                            <span class="text-xs text-slate-400">${expense.category}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold text-slate-900 text-sm">-${Number(expense.amount).toLocaleString('hu-HU')} Ft</span>
+                        <button onclick="deleteExpense(${expense.id})" class="text-slate-300 hover:text-red-500 transition cursor-pointer p-1">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                expenseList.appendChild(item);
+            });
+        }
+
+        function getCategoryColor(category) {
+            switch(category) {
+                case 'Étel/Ital': return 'bg-amber-400';
+                case 'Lakás/Rezsi': return 'bg-blue-400';
+                case 'Utazás': return 'bg-emerald-400';
+                case 'Szórakozás': return 'bg-purple-400';
+                default: return 'bg-slate-400';
+            }
+        }
+
+        function updateTotal() {
+            const total = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+            totalAmountDisplay.innerText = `${total.toLocaleString('hu-HU')} Ft`;
+        }
+
+        expenseForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newExpense = {
+                id: Date.now(),
+                title: titleInput.value.trim(),
+                amount: amountInput.value,
+                category: categorySelect.value
+            };
+            expenses.push(newExpense);
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+            init();
+            expenseForm.reset();
+        });
+
+        window.deleteExpense = function(id) {
+            expenses = expenses.filter(expense => expense.id !== id);
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+            init();
+        }
+
+        clearAllBtn.addEventListener('click', () => {
+            if (confirm('Biztosan törölni szeretnéd az összes e havi kiadást?')) {
+                expenses = [];
+                localStorage.setItem('expenses', JSON.stringify(expenses));
+                init();
+            }
+        });
+
+        init();
+    </script>
+</body>
+</html>
